@@ -992,7 +992,8 @@ function [mx, xform]=get_nifti_transform(hdr, varargin)
     %
     % NNO Dec 2014
 
-    defaults.nifti_form=[];
+    %defaults.nifti_form=[];
+    defaults.nifti_form='sform';
     opt=cosmo_structjoin(defaults,varargin);
 
     if isempty(opt.nifti_form)
