@@ -18,11 +18,11 @@ else
 end
 
 true_data_nii = cosmo_fmri_dataset([base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/' ... 
-        'res_accuracy_minus_chance.nii'], 'mask',['/Volumes/data1/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/mask.nii']);
+        'res_accuracy_minus_chance.nii.gz'], 'mask',[base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/mask.nii']);
 
 perm_data = {}; % should be 1 x nperms cell matrix
 for i = 1:nperms
-    perm_data{i} = cosmo_fmri_dataset([base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/perm/perm' num2str(i, '%03d') '/results_avg_allreps/res_accuracy_minus_chance.nii'], ...
+    perm_data{i} = cosmo_fmri_dataset([base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/perm/perm' num2str(i, '%03d') '/results_avg_allreps/res_accuracy_minus_chance.nii.gz'], ...
         'mask', [base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/mask.nii']);
 end
 
