@@ -17,7 +17,7 @@ else
     error('Can''t find base folder, are we on habilis or the HPC?');
 end
 
-true_data_nii = cosmo_fmri_dataset([base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/' ... 
+true_data_nii = cosmo_fmri_dataset([base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/' ...
         'res_accuracy_minus_chance.nii.gz'], 'mask',[base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/mask.nii']);
 
 perm_data = {}; % should be 1 x nperms cell matrix
