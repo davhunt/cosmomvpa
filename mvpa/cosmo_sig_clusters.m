@@ -27,7 +27,7 @@ for i = 1:nperms
 end
 
 nbrhood = cosmo_cluster_neighborhood(true_data_nii);
-sig_clusters_ds = cosmo_montecarlo_cluster_stat(true_data_nii,nbrhood,'h0_mean',0,'feature_stat', 'none','cluster_stat','tfce','dh',dh,'null',perm_data,'nproc',6);
+sig_clusters_ds = cosmo_montecarlo_cluster_stat(true_data_nii,nbrhood,'h0_mean',0,'feature_stat', 'none','cluster_stat','tfce','dh',dh,'null',perm_data,'nproc',1);
 
 cosmo_map2fmri(sig_clusters_ds, [base_folder '/Complex_seq_analysis/0' num2str(subj, '%02d') '/MVPA/' subfolder '/sig_clusters_results.nii.gz']);
 
