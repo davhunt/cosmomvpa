@@ -26,8 +26,8 @@ nNulls_per_subject = 500;
 %outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_group_results/better_mask';
 % ---------------------------
 
-%mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85pct_bin_bps.nii.gz';
-mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85_new.nii.gz';
+mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85pct_bin_bps.nii.gz';
+%mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85_new.nii.gz';
 % ^ A group mask consisting of all voxels present in >= 85% of the individual subjects' masks
 % at least 19 / 22 subjects
 
