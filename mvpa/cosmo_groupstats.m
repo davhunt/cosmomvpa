@@ -1,10 +1,21 @@
-function [] = cosmo_groupstats(subfolder, outdir, nIter, cluster_stat, connectivity, null_data_mat)
+function [] = cosmo_groupstats(subfolder, outdir, nIter, opt)
+
+arguments
+    subfolder
+    outdir
+    nIter
+    opt.cluster_stat = 'tfce'
+    opt.connectivity = 1
+    opt.null_data_mat = 'none'
+    opt.nNulls_per_subject = 500
+end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
 % subfolder: folder under Complex_seq_analysis/XXX/MVPA to look for perm and results folders
-% cluster_stat: 'tfce' or 'maxsize'; cluster statistic to generate p-value map with
-% connectivity: how to define contiguous voxels, 1 for just faces, 2 for face or edge, 3 for face edge or vertex
-% null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder
+% cluster_stat: 'tfce' or 'maxsize'; cluster statistic to generate p-value map with (default: 'tfce')
+% connectivity: how to define contiguous voxels, 1 for just faces, 2 for face or edge, 3 for face edge or vertex (default: 1)
+% null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder (default: none)
+% nNulls_per_subject: how many nulls from each subject are available to randomly choose from to build group map (default: 500)
 
 if exist('/N/slate/brainevo/Implicit_Learning/CoSMoMVPA/mvpa') == 7 % slate
     addpath(genpath('/N/slate/brainevo/Implicit_Learning/CoSMoMVPA/mvpa'));
@@ -28,7 +39,7 @@ nNulls_per_subject = 500;
 
 mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85pct_bin_bps.nii.gz';
 %mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85_new.nii.gz';
-% ^ A group mask consisting of all voxels present in >= 85% of the individual subjects' masks
+% ^ A group mask consisting of all voxels present in >= 85% of the individual subjects'' masks
 % at least 19 / 22 subjects
 
 subjs = {};
