@@ -111,8 +111,6 @@ end
 
 
 
-
-
 %% --- Step 1. Observed group map (mean across subjects) ---
 group_obs = mean(obs_data,1); % 1 x nVoxels
 %tfce_obs  = cosmo_tfce(group_obs, template_ds.fa, template_ds.a);
