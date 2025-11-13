@@ -8,6 +8,7 @@ arguments
     opt.connectivity = 1
     opt.null_data_mat = 'none'
     opt.nNulls_per_subject = 500
+    opt.maxsize_threshold = 10
 end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
@@ -33,7 +34,12 @@ subj_list = [1 2 3 4 5 6 7 8 9 10 13 14 15 16 17 18 19 20 21 22 23 24];
 % Could modify this
 % subj_list = [2 4 14 17 18 19];
 nSubjects = numel(subj_list);
-nNulls_per_subject = 500;
+nNulls_per_subject = opt.nNulls_per_subject;
+%nNulls_per_subject = 500;
+null_data_mat = opt.null_data_mat;
+connectivity = opt.connectivity;
+cluster_stat = opt.cluster_stat;
+maxisze_threshold = opt.maxsize_threshold
 %outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_group_results/better_mask';
 % ---------------------------
 
@@ -113,12 +119,18 @@ end
 
 %% --- Step 1. Observed group map (mean across subjects) ---
 group_obs = mean(obs_data,1); % 1 x nVoxels
-%tfce_obs  = cosmo_tfce(group_obs, template_ds.fa, template_ds.a);
-tfce_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, 'tfce', 'dh', 0.1);
+%tfce_obs  = cosmo_tfce(group_obs, template_ds.fa, template_ds.a); % function doesn't exist?
+if strcmp(cluster_stat, 'tfce')
+    clusterstat_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, cluster_stat, 'dh', 0.1);
+elseif strcmp(cluster_stat, 'maxsize')
+    clusterstat_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, cluster_stat, 'threshold', maxsize_threshold);
+else
+    error('Cluster stat must be either tfce or maxsize, exiting.');
+end
 %tfce_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', 0.1);
 
 %% --- Step 2. Null distribution ---
-null_max_tfce = zeros(nIter,1);
+null_max_clusterstat = zeros(nIter,1);
 
 for it = 1:nIter
     if mod(it,500)==0
@@ -135,18 +147,22 @@ for it = 1:nIter
     % group average
     group_null = mean(null_sample,1);
     
-    % TFCE
+    % TFCE, or maxsize
     %tfce_null = cosmo_tfce(group_null, template_ds.fa, template_ds.a);
-    tfce_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', 0.1); 
+    if strcmp(cluster_stat, 'tfce')
+        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', 0.1); 
+    elseif strcmp(cluster_stat, 'maxsize')
+        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'maxsize', 'threshold', maxsize_threshold);
+    end
     
-    % store maximum TFCE value across voxels
-    null_max_tfce(it) = max(tfce_null);
+    % store maximum TFCE or maxsize value across voxels
+    null_max_clusterstat(it) = max(clusterstat_null);
 end
 
 %% --- Step 3. Compute voxelwise FWE-corrected p-values ---
 p_map = zeros(1,nVoxels);
 for v = 1:nVoxels
-    p_map(v) = (sum(null_max_tfce >= tfce_obs(v)) + 1) / (nIter + 1);
+    p_map(v) = (sum(null_max_clusterstat >= clusterstat_obs(v)) + 1) / (nIter + 1);
 end
 
 %% --- Step 4. Save results ---
@@ -156,14 +172,14 @@ if ~isfolder(outdir)
 end
 
 ds_out = template_ds;
-ds_out.samples = tfce_obs;
-cosmo_map2fmri(ds_out, [ outdir '/group_TFCE_observed.nii.gz']);
+ds_out.samples = clusterstat_obs;
+cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_observed.nii.gz']);
 
 ds_out.samples = p_map;
-cosmo_map2fmri(ds_out, [ outdir '/group_TFCE_pFWE.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_pFWE.nii.gz']);
 
 ds_out.samples = p_map < 0.05;
-cosmo_map2fmri(ds_out, [ outdir '/group_TFCE_pFWE05_mask.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_pFWE05_mask.nii.gz']);
 
 fprintf('Done. Significant voxels at p<0.05 FWE: %d\n', sum(p_map<0.05));
 
