@@ -15,12 +15,12 @@ end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
 % subfolder: folder under Complex_seq_analysis/XXX/MVPA to look for perm and results folders
-% cluster_stat: 'tfce' or 'maxsize'; cluster statistic to generate p-value map with (default: 'tfce')
+% cluster_stat: 'tfce', 'maxsize', or 'maxsum'; cluster statistic to generate p-value map with (default: 'tfce')
 % connectivity: how to define contiguous voxels, 1 for just faces, 2 for face or edge, 3 for face edge or vertex (default: 1)
 % null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder (default: none)
 % nNulls_per_subject: how many nulls from each subject are available to randomly choose from to build group map (default: 500)
 % dh: size of integration step dh (default: 0.1)
-% maxsize_threshold: cluster-forming threshold for "maxsize" argument to "cosmo_measure_clusters" (default: 12.5) 
+% maxsize_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 12.5) 
 %                        keep in mind if using t-statistic threshold should be a t-value (i.e. 1.721 for p < 0.05 and df = 21)
 % stat_map: 'accuracy' or 'tstat' (default: 'accuracy')
 
@@ -55,7 +55,7 @@ mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_t
 % at least 19 / 22 subjects
 
 assert(isfile(mask_fn), 'can''t find mask file');
-assert(ismember(cluster_stat, {'tfce','maxsize'}), 'cluster_stat must be tfce or maxsize');
+assert(ismember(cluster_stat, {'tfce','maxsize','maxsum'}), 'cluster_stat must be tfce or maxsize');
 assert(ismember(stat_map, {'accuracy','tstat'}), 'stat_map must be accuracy or tstat');
 
 subjs = {};
