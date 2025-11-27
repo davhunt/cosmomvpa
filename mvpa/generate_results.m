@@ -2,6 +2,7 @@ function [] = generate_results()
 
 null_data_mat='/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results/null_data.mat';
 subfolder = 'breakpoint_rts_unsmoothed_native_antsmask';
+outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results';
 nIter = 10000;
 
 %for stat_map = ["accuracy", "tstat"]
