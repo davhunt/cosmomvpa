@@ -15,6 +15,7 @@ end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
 % subfolder: folder under Complex_seq_analysis/XXX/MVPA to look for perm and results folders
+% outdir: folder (full path) to save results to
 % cluster_stat: 'tfce', 'maxsize', or 'maxsum'; cluster statistic to generate p-value map with (default: 'tfce')
 % connectivity: how to define contiguous voxels, 1 for just faces, 2 for face or edge, 3 for face edge or vertex (default: 1)
 % null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder (default: none)
@@ -49,7 +50,8 @@ stat_map = opt.stat_map;
 %outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_group_results/better_mask';
 % ---------------------------
 
-mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85pct_bin_bps.nii.gz';
+%mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85pct_bin_bps.nii.gz';
+mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask/group_mask_thr80pct.nii.gz';
 %mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85_new.nii.gz';
 % ^ A group mask consisting of all voxels present in >= 85% of the individual subjects'' masks
 % at least 19 / 22 subjects
