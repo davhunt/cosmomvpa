@@ -4,26 +4,31 @@ arguments
     subfolder
     outdir
     nIter
+    opt.output_string = ''
     opt.cluster_stat = 'tfce'
     opt.connectivity = 1
     opt.null_data_mat = 'none'
     opt.nNulls_per_subject = 500
     opt.dh = 0.1
-    opt.maxsize_threshold = 12.5
+    opt.cluster_threshold = 10.0
     opt.stat_map = 'accuracy'
 end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
 % subfolder: folder under Complex_seq_analysis/XXX/MVPA to look for perm and results folders
 % outdir: folder (full path) to save results to
+% output_string: optional string to prepend to output file names (default: '')
 % cluster_stat: 'tfce', 'maxsize', or 'maxsum'; cluster statistic to generate p-value map with (default: 'tfce')
 % connectivity: how to define contiguous voxels, 1 for just faces, 2 for face or edge, 3 for face edge or vertex (default: 1)
 % null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder (default: none)
 % nNulls_per_subject: how many nulls from each subject are available to randomly choose from to build group map (default: 500)
 % dh: size of integration step dh (default: 0.1)
-% maxsize_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 12.5) 
-%                        keep in mind if using t-statistic threshold should be a t-value (i.e. 1.721 for p < 0.05 and df = 21)
+% cluster_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 10.0) 
+%                        keep in mind if using t-statistic threshold should be a t-value (i.e. 1.721 for p < 0.05 and df = 21, or 1.323 for p < 0.1 which is reasonable)
 % stat_map: 'accuracy' or 'tstat' (default: 'accuracy')
+
+%% sample call:
+%% cosmo_groupstats(subfolder, outdir, nIter, cluster_stat='tfce', connectivity=1, null_data_mat='/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results/null_data.mat', nNulls_per_subject=500, dh=0.1, cluster_threshold=10.0, stat_map='accuracy')
 
 if exist('/N/slate/brainevo/Implicit_Learning/CoSMoMVPA/mvpa') == 7 % slate
     addpath(genpath('/N/slate/brainevo/Implicit_Learning/CoSMoMVPA/mvpa'));
@@ -40,12 +45,13 @@ subj_list = [1 2 3 4 5 6 7 8 9 10 13 14 15 16 17 18 19 20 21 22 23 24];
 % Could modify this
 % subj_list = [2 4 14 17 18 19];
 nSubjects = numel(subj_list);
+output_string = opt.output_string;
 nNulls_per_subject = opt.nNulls_per_subject;
 null_data_mat = opt.null_data_mat;
 connectivity = opt.connectivity;
 cluster_stat = opt.cluster_stat;
 dh = opt.dh;
-maxsize_threshold = opt.maxsize_threshold;
+cluster_threshold = opt.cluster_threshold;
 stat_map = opt.stat_map;
 %outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_group_results/better_mask';
 % ---------------------------
@@ -63,7 +69,8 @@ assert(ismember(stat_map, {'accuracy','tstat'}), 'stat_map must be accuracy or t
 subjs = {};
 for i = subj_list
     sub = sprintf('%02d', i);
-    subjs{end+1} = ['/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/0' sub '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz'];
+    %subjs{end+1} = ['/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/0' sub '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz'];
+    subjs{end+1} = ['/N/project/brainevo/Complex_seq_analysis/0' sub '/MVPA/' subfolder '/TDT_results/TDT_results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz'];
 end
 
 template_ds = cosmo_fmri_dataset(subjs{1},'mask',mask_fn);
@@ -87,7 +94,8 @@ if strcmp(null_data_mat, 'none') == 1
         fprintf('Loading nulls for subject %d/%d\n',s, numel(subj_list));
         fnames = cell(nNulls_per_subject,1);
         for i = 1:nNulls_per_subject
-          fnames{i} = sprintf('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/0%02d/MVPA/%s/perm/perm%03d/results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz', subj_list(s), subfolder, i);
+          %fnames{i} = sprintf('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/0%02d/MVPA/%s/perm/perm%03d/results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz', subj_list(s), subfolder, i);
+          fnames{i} = sprintf('/N/project/brainevo/Complex_seq_analysis/0%02d/MVPA/%s/perm/perm%03d/results_avg_allreps/res_accuracy_minus_chance_mni.nii.gz', subj_list(s), subfolder, i);
         end
         assert(numel(fnames) == nNulls_per_subject, 'Mismatch for sub %d',subj_list(s));
         tmp = zeros(nNulls_per_subject, nVoxels);
@@ -127,6 +135,7 @@ end
 if strcmp(stat_map, 'accuracy')
     group_obs = mean(obs_data,1); % 1 x nVoxels
 elseif strcmp(stat_map, 'tstat')
+    %obs_data = obs_data ./ 100; % normalize to [-.5, .5] for t-test %actually not necessary
     t_obs = onesample_t(obs_data);
     group_obs = t_obs;
 end
@@ -134,8 +143,8 @@ end
 %tfce_obs  = cosmo_tfce(group_obs, template_ds.fa, template_ds.a); % function doesn't exist?
 if strcmp(cluster_stat, 'tfce')
     clusterstat_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, cluster_stat, 'dh', dh);
-elseif strcmp(cluster_stat, 'maxsize')
-    clusterstat_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, cluster_stat, 'threshold', maxsize_threshold);
+elseif strcmp(cluster_stat, 'maxsize') || strcmp(cluster_stat, 'maxsum')
+    clusterstat_obs = cosmo_measure_clusters(group_obs, nbrhood_mat, cluster_stat, 'threshold', cluster_threshold);
 end
 %tfce_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', dh);
 
@@ -158,6 +167,7 @@ for it = 1:nIter
     if strcmp(stat_map, 'accuracy')
         group_null = mean(null_sample,1); % 1 x nVoxels
     elseif strcmp(stat_map, 'tstat')
+        %null_sample = null_sample ./ 100; % normalize to [-.5, .5] for t-test %actually not necessary
         t_null = onesample_t(null_sample);
         group_null = t_null;
     end
@@ -165,8 +175,8 @@ for it = 1:nIter
     % TFCE, or maxsize
     if strcmp(cluster_stat, 'tfce')
         clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', dh); 
-    elseif strcmp(cluster_stat, 'maxsize')
-        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'maxsize', 'threshold', maxsize_threshold);
+    elseif strcmp(cluster_stat, 'maxsize') || strcmp(cluster_stat, 'maxsum')
+        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'maxsize', 'threshold', cluster_threshold);
     end
     
     % store maximum TFCE or maxsize value across voxels to build null distribution of max vals
@@ -187,15 +197,18 @@ end
 
 ds_out = template_ds;
 ds_out.samples = clusterstat_obs;
-cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_observed.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_observed.nii.gz']);
 
 ds_out.samples = p_map;
-cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_pFWE.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE.nii.gz']);
 
 ds_out.samples = p_map < 0.05;
-cosmo_map2fmri(ds_out, [ outdir '/group_clusterstat_pFWE05_mask.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE05_clusters.nii.gz']);
 
-fprintf('Done. Significant voxels at p<0.05 FWE: %d\n', sum(p_map<0.05));
+ds_out.samples = p_map < 0.01;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_orrected_pFWE01_clusters.nii.gz']);
+
+fprintf('Done. Significant voxels at p<0.05 FWE: %d, and at p<0.01 FWE: %d\n', sum(p_map<0.05), sum(p_map<0.01));
 
 end
 
