@@ -176,7 +176,7 @@ for it = 1:nIter
     if strcmp(cluster_stat, 'tfce')
         clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'tfce', 'dh', dh); 
     elseif strcmp(cluster_stat, 'maxsize') || strcmp(cluster_stat, 'maxsum')
-        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, 'maxsize', 'threshold', cluster_threshold);
+        clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, cluster_stat, 'threshold', cluster_threshold);
     end
     
     % store maximum TFCE or maxsize value across voxels to build null distribution of max vals
@@ -206,9 +206,10 @@ ds_out.samples = p_map < 0.05;
 cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE05_clusters.nii.gz']);
 
 ds_out.samples = p_map < 0.01;
-cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_orrected_pFWE01_clusters.nii.gz']);
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE01_clusters.nii.gz']);
 
 fprintf('Done. Significant voxels at p<0.05 FWE: %d, and at p<0.01 FWE: %d\n', sum(p_map<0.05), sum(p_map<0.01));
+fprintf('Significant voxels at p<0.005 FWE: %d, and at p<0.001 FWE: %d\n', sum(p_map<0.005), sum(p_map<0.001));
 
 end
 
