@@ -10,7 +10,7 @@ arguments
     opt.null_data_mat = 'none'
     opt.nNulls_per_subject = 500
     opt.dh = 0.1
-    opt.cluster_threshold = 10.0
+    opt.cluster_threshold = 2.85
     opt.stat_map = 'accuracy'
 end
 
@@ -23,7 +23,7 @@ end
 % null_data_mat: path to null data .mat file, or 'none' to generate from "perm" folder (default: none)
 % nNulls_per_subject: how many nulls from each subject are available to randomly choose from to build group map (default: 500)
 % dh: size of integration step dh (default: 0.1)
-% cluster_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 10.0) 
+% cluster_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 2.85) 
 %                        keep in mind if using t-statistic threshold should be a t-value (i.e. 1.721 for p < 0.05 and df = 21, or 1.323 for p < 0.1 which is reasonable)
 % stat_map: 'accuracy' or 'tstat' (default: 'accuracy')
 
@@ -179,7 +179,7 @@ for it = 1:nIter
         clusterstat_null = cosmo_measure_clusters(group_null, nbrhood_mat, cluster_stat, 'threshold', cluster_threshold);
     end
     
-    % store maximum TFCE or maxsize value across voxels to build null distribution of max vals
+    % store maximum TFCE, maxsize, or maxsum value across voxels to build null distribution of max vals
     null_max_clusterstat(it) = max(clusterstat_null);
 end
 
