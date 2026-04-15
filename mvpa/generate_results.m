@@ -1,5 +1,9 @@
 function [] = generate_results()
 
+% quick function to generate results for the 6 possible permutations of stat map (tstat or accuracy) and
+% cluster stat (tfce, maxsize, or maxsum) parameters
+% "tstat" with "tfce" appear to be the most statistically valid
+
 null_data_mat='/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results/null_data.mat';
 subfolder = 'breakpoint_rts_unsmoothed_native_antsmask';
 outdir = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results';

@@ -61,6 +61,7 @@ mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask/g
 %mask_fn = '/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/group_mask_thr_85_new.nii.gz';
 % ^ A group mask consisting of all voxels present in >= 85% of the individual subjects'' masks
 % at least 19 / 22 subjects
+% Or 80%, at least 18 / 22 subjects, seems to be cleaner looking
 
 assert(isfile(mask_fn), 'can''t find mask file');
 assert(ismember(cluster_stat, {'tfce','maxsize','maxsum'}), 'cluster_stat must be tfce or maxsize');
@@ -207,6 +208,15 @@ cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_p
 
 ds_out.samples = p_map < 0.01;
 cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE01_clusters.nii.gz']);
+
+ds_out.samples = p_map < 0.005;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE005_clusters.nii.gz']);
+
+ds_out.samples = p_map < 0.001;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE001_clusters.nii.gz']);
+
+ds_out.samples = p_map < 0.0005;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE0005_clusters.nii.gz']);
 
 fprintf('Done. Significant voxels at p<0.05 FWE: %d, and at p<0.01 FWE: %d\n', sum(p_map<0.05), sum(p_map<0.01));
 fprintf('Significant voxels at p<0.005 FWE: %d, and at p<0.001 FWE: %d\n', sum(p_map<0.005), sum(p_map<0.001));
