@@ -218,6 +218,9 @@ cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_p
 ds_out.samples = p_map < 0.0005;
 cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE0005_clusters.nii.gz']);
 
+ds_out.samples = p_map < 0.0001;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE0001_clusters.nii.gz']);
+
 fprintf('Done. Significant voxels at p<0.05 FWE: %d, and at p<0.01 FWE: %d\n', sum(p_map<0.05), sum(p_map<0.01));
 fprintf('Significant voxels at p<0.005 FWE: %d, and at p<0.001 FWE: %d\n', sum(p_map<0.005), sum(p_map<0.001));
 
