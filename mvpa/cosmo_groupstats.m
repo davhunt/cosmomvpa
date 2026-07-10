@@ -8,7 +8,7 @@ arguments
     opt.cluster_stat = 'tfce'
     opt.connectivity = 1
     opt.null_data_mat = 'none'
-    opt.nNulls_per_subject = 500
+    opt.nNulls_per_subject = 1000
     opt.dh = 0.1
     opt.cluster_threshold = 2.85
     opt.stat_map = 'accuracy'
@@ -106,6 +106,7 @@ if strcmp(null_data_mat, 'none') == 1
         end
     null_data{s} = tmp;
     end
+    %save('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_new_bps_group_results/null_data.mat', 'null_data'); % save to .mat file, quicker
 else
     load(null_data_mat); % save a few minutes loading null_data from a pre-saved .mat file
 end
