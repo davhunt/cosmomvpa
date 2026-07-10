@@ -106,7 +106,7 @@ if strcmp(null_data_mat, 'none') == 1
         end
     null_data{s} = tmp;
     end
-    %save('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_new_bps_group_results/null_data.mat', 'null_data'); % save to .mat file, quicker
+    %save('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_new_bps_group_results/null_data.mat', 'null_data', '-v7.3'); % save to .mat file, quicker
 else
     load(null_data_mat); % save a few minutes loading null_data from a pre-saved .mat file
 end
