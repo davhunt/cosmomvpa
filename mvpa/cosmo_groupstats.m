@@ -11,7 +11,7 @@ arguments
     opt.nNulls_per_subject = 1000
     opt.dh = 0.1
     opt.cluster_threshold = 2.85
-    opt.stat_map = 'accuracy'
+    opt.stat_map = 'tstat'
 end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
@@ -154,7 +154,7 @@ end
 null_max_clusterstat = zeros(nIter,1);
 
 for it = 1:nIter
-    if mod(it,500)==0
+    if mod(it,5000)==0
         fprintf('Iteration %d/%d\n', it, nIter);
     end
     
