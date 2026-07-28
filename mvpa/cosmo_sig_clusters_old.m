@@ -1,4 +1,4 @@
-function [] = cosmo_sig_clusters(subj, dh, subfolder, nperms)
+function [] = cosmo_sig_clusters_old(subj, dh, subfolder, nperms)
 
 % subj: subject number
 % dh: threshold step size (For typical use cases, a value so that 100*dh is in the same order of magnitude as the range)

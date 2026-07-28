@@ -8,10 +8,10 @@ arguments
     opt.cluster_stat = 'tfce'
     opt.connectivity = 1
     opt.null_data_mat = 'none'
-    opt.nNulls_per_subject = 500
+    opt.nNulls_per_subject = 1000
     opt.dh = 0.1
-    opt.cluster_threshold = 2.85
-    opt.stat_map = 'accuracy'
+    opt.cluster_threshold = 2.831
+    opt.stat_map = 'tstat'
 end
 
 % nIter: number of permuted group average iterations used to generate the null distribution
@@ -25,7 +25,7 @@ end
 % dh: size of integration step dh (default: 0.1)
 % cluster_threshold: cluster-forming threshold for "maxsize" or "maxsum" argument to "cosmo_measure_clusters" (default: 2.85) 
 %                        keep in mind if using t-statistic threshold should be a t-value (i.e. 1.721 for p < 0.05 and df = 21, or 1.323 for p < 0.1 which is reasonable)
-% stat_map: 'accuracy' or 'tstat' (default: 'accuracy')
+% stat_map: 'accuracy' or 'tstat' (default: 'tstat')
 
 %% sample call:
 %% cosmo_groupstats(subfolder, outdir, nIter, cluster_stat='tfce', connectivity=1, null_data_mat='/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_group_results/null_data.mat', nNulls_per_subject=500, dh=0.1, cluster_threshold=10.0, stat_map='accuracy')
