@@ -106,6 +106,7 @@ if strcmp(null_data_mat, 'none') == 1
         end
     null_data{s} = tmp;
     end
+    %save('/N/slate/brainevo/Implicit_Learning/Complex_seq_analysis/breakpoint_rts_unsmoothed_native_antsmask_new_bps_group_results/null_data.mat', 'null_data', '-v7.3'); % save to .mat file, quicker
 else
     load(null_data_mat); % save a few minutes loading null_data from a pre-saved .mat file
 end
@@ -153,7 +154,7 @@ end
 null_max_clusterstat = zeros(nIter,1);
 
 for it = 1:nIter
-    if mod(it,500)==0
+    if mod(it,5000)==0
         fprintf('Iteration %d/%d\n', it, nIter);
     end
     
@@ -217,6 +218,9 @@ cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_p
 
 ds_out.samples = p_map < 0.0005;
 cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE0005_clusters.nii.gz']);
+
+ds_out.samples = p_map < 0.0001;
+cosmo_map2fmri(ds_out, [ outdir '/' char(output_string) 'group_clstr_corrected_pFWE0001_clusters.nii.gz']);
 
 fprintf('Done. Significant voxels at p<0.05 FWE: %d, and at p<0.01 FWE: %d\n', sum(p_map<0.05), sum(p_map<0.01));
 fprintf('Significant voxels at p<0.005 FWE: %d, and at p<0.001 FWE: %d\n', sum(p_map<0.005), sum(p_map<0.001));
