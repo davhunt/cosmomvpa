@@ -1,4 +1,4 @@
-function [] = cosmo_sigclusters(subfolder, outdir, subj, opt)
+function [] = cosmo_per_subject_sig_clusters(subfolder, outdir, subj, opt)
 
 arguments
     subfolder
