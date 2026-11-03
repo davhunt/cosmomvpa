@@ -11,8 +11,8 @@ if exist('/N/slate/brainevo/Implicit_Learning') == 7
     addpath(genpath([base_folder '/CoSMoMVPA/mvpa']));
 elseif exist('/Volumes/data1') == 7
     base_folder = ['/Volumes/data1']; % Or on habilis
-    addpath(genpath('/Users/lab/Downloads/CoSMoMVPA/mvpa'));
-    addpath(genpath('/Users/lab/Downloads/matlab_nifti_tools'));
+    addpath(genpath('/Users/brainevo/Downloads/CoSMoMVPA/mvpa'));
+    addpath(genpath('/Users/brainevo/Downloads/matlab_nifti_tools'));
 else
     error('Can''t find base folder, are we on habilis or the HPC?');
 end

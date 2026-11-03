@@ -21,8 +21,8 @@ if exist('/N/slate/brainevo/Implicit_Learning/CoSMoMVPA/mvpa') == 7 % slate
     addpath(genpath('/N/slate/brainevo/Implicit_Learning/matlab_nifti_tools'));
 else
     base_folder = '/Volumes/data1';
-    addpath(genpath('/Users/lab/Downloads/CoSMoMVPA/mvpa')); % habilis
-    addpath(genpath('/Users/lab/Downloads/matlab_nifti_tools'));
+    addpath(genpath('/Users/brainevo/Downloads/CoSMoMVPA/mvpa')); % habilis
+    addpath(genpath('/Users/brainevo/Downloads/matlab_nifti_tools'));
 end
 
 %%%%%%
